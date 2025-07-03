@@ -26,7 +26,7 @@ users_db = {
 
 class SignupRequest(BaseModel):
     user_id: str = Field(..., min_length=6, max_length=20, pattern=r"^[a-zA-Z0-9_]+$")
-    password: str = Field(..., min_length=8, max_length=20, regex=r"^[!-~]+$")
+    password: str = Field(..., min_length=8, max_length=20, pattern=r"^[!-~]+$")
 
 class UserResponse(BaseModel):
     user_id: str
