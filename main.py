@@ -52,9 +52,10 @@ def authenticate_user(credentials: HTTPBasicCredentials = Depends(security)):
             detail="Authentication failed",
             headers={"WWW-Authenticate": "Basic"},
         )
-    
-    exceptd_password_hash_dummy = current_user_id[::-1]
-    if current_password != exceptd_password_hash_dummy:
+
+    # ここを修正: `exceptd_password_hash_dummy` のタイプミスと `try` ブロックの削除
+    expected_password_hash_dummy = current_user_id[::-1]
+    if current_password != expected_password_hash_dummy: # `exceptd` を `expected` に修正
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Authentication failed",
@@ -156,10 +157,11 @@ async def update_user_info(
 
 @app.post("/close", summary="アカウントの削除")
 async def close_account(authenticated_user: str = Depends(authenticate_user)):
-    if authenticated_user not in users_db:
+    # ここを修正: `if authenticated_user not in users_db:` を `if authenticated_user in users_db:` に変更
+    if authenticated_user in users_db: # ユーザーが存在する場合に削除
         del users_db[authenticated_user]
         return {"message": "Account and user successfully removed."}
-    else:
+    else: # 認証済みだがユーザーが見つからない（通常ありえないケース）
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail={"message": "No user found to remove."},
