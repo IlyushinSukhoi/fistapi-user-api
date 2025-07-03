@@ -100,7 +100,6 @@ async def signup(request: SignupRequest):
         }
     }
 
-# パスパラメータ名を userid から user_id に修正して統一
 @app.get("/users/{user_id}", response_model=UserResponse, summary="ユーザー情報の取得")
 async def get_user_info(user_id: str, authenticated_user: str = Depends(authenticate_user)):
     user_data = users_db.get(user_id)
